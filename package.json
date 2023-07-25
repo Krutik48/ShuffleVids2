@@ -1,0 +1,25 @@
+{
+  "name": "shuffle-vids",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder",
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "fileAssociations": {
+    "mkv": [
+      "mkv"
+    ],
+    "mp4": [
+      "mp4"
+    ]
+  },
+  "devDependencies": {
+    "electron-builder": "^24.6.3"
+  }
+}
