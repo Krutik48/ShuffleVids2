@@ -261,6 +261,18 @@ li:active {
     width: 0px;
 }
 
+.plyr__tooltip{
+    padding: 4px !important;
+}
+
+.plyr__tooltip::-webkit-scrollbar{
+    width: 0px;
+}
+
+.plyr__progress input{
+    margin-left: 0px !important;
+}
+
 #seekbar-display{
     position: absolute;
     bottom: 50px;
