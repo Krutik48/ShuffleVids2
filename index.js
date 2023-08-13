@@ -3,12 +3,15 @@ const input2 = document.getElementById("fileInput2");
 const searchInput = document.getElementById("search-input");
 const lyricsSearchInput = document.getElementById("lyrics-search");
 const lyricsBtn = document.getElementById("lyricsBtn");
+const toogleLyricsBtn = document.getElementById("toogle-lyrics");
 const upBtn = document.getElementById("upBtn");
 const downBtn = document.getElementById("downBtn");
 const dropArea = document.getElementById("drop-area");
 const dark = document.getElementById("dark");
 const light = document.getElementById("light");
 const shuffleBtn = document.getElementById("suffleBtn");
+const sortAtozBtn = document.getElementById("sortAtobBtn");
+const sortTimeBtn = document.getElementById("sortTimeBtn");
 const videoPlayerContainer = document.getElementById("video-player-container");
 const playlist = document.getElementById("playlist");
 const lyricsSec = document.getElementById("lyrics");
@@ -42,6 +45,8 @@ let saturation = 100;
 let hueRotate = 0;
 let grayscale = 0;
 
+let timeSortFlag = false
+let AtoZsortFlag = false
 
 let videoLinks = [];
 let idx =0;
@@ -119,6 +124,48 @@ shuffleBtn.addEventListener("click",()=>{
     playRandomVideo();
 })
 
+sortAtozBtn.addEventListener("click",()=>{
+    if(AtoZsortFlag){
+        videoLinks.sort((a,b)=>b[1].localeCompare(a[1]));
+        AtoZsortFlag = false;
+    }
+    else{
+        videoLinks.sort((a,b)=>a[1].localeCompare(b[1]));
+        AtoZsortFlag = true;
+    }
+    playlist.innerHTML = "";
+    let i =1;
+    videoLinks.forEach(song => { 
+        const li = document.createElement("li");
+        li.innerHTML = `${i}) ${song[1]}`;
+        playlist.appendChild(li);
+        i++;
+    });
+    setItemEventListner();
+    playRandomVideo();
+})
+
+sortTimeBtn.addEventListener("click",()=>{
+    if(timeSortFlag){
+        videoLinks.sort((a,b)=>a[2]-b[2]);
+        timeSortFlag = false;
+    }
+    else{
+        videoLinks.sort((a,b)=>b[2]-a[2]);
+        timeSortFlag = true;
+    }
+    playlist.innerHTML = "";
+    let i =1;
+    videoLinks.forEach(song => { 
+        const li = document.createElement("li");
+        li.innerHTML = `${i}) ${song[1]}`;
+        playlist.appendChild(li);
+        i++;
+    });
+    setItemEventListner();
+    playRandomVideo();
+})
+
 dropArea.addEventListener("drop", (e)=>{
     let dt = e.dataTransfer;
     let files = dt.files;
@@ -134,6 +181,33 @@ dropArea.addEventListener("drop", (e)=>{
         reader.readAsDataURL(file)
     }
 }, false);
+
+
+function getQueryParam(name, url) {
+    // filePath should be in '/' not in '\'
+    console.log(url)
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+    results = regex.exec(url);
+    console.log(results);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+// var filePathParam = getQueryParam('filePath');
+var filePathParam = getQueryParam('filePath');
+
+if (filePathParam) {
+    const file = {
+        name: filePathParam.split("\\").pop(),
+        filePath: filePathParam,
+        lastModifiedDate: new Date(),
+        type: "fromPath"
+    }
+    handleFiles([file]);
+}
 
 videoPlayerContainer.addEventListener("dragover", function(event) {
     event.preventDefault();
@@ -196,34 +270,30 @@ function handleFiles(files,wantToAddInExisting=false) {
     try {
         document.getElementById("videoPlayer").classList.remove("invisible");
         document.getElementById("box").classList.add("invisible");
+        document.getElementById("playlist-div").style.height = "90vh";
         searchInput.classList.remove("invisible");
         lyricsSearchInput.classList.remove("invisible");
         input2.classList.remove("invisible");
         videoPlayerContainer.classList.remove("invisible");
         shuffleBtn.classList.remove("invisible");
         lyricsBtn.classList.remove("invisible");
+        sortAtozBtn.classList.remove("invisible");
+        sortTimeBtn.classList.remove("invisible");
         upBtn.classList.remove("invisible");
         lyricsSec.classList.remove("invisible");
-        playlist.style.height = "90vh";
+        toogleLyricsBtn.classList.remove("invisible");
     } catch (error) {
         console.log(error);
     }
     
-
-
-
-
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
+        
         if (file.type.startsWith("video")) {
-            const video = {
-                id: i,
-                name: file.name,
-                type: file.type,
-                size: file.size,
-                data: file
-            };
-            videoLinks.push([URL.createObjectURL(file),file.name]);
+            videoLinks.push([URL.createObjectURL(file),file.name, file.lastModifiedDate]);
+        }
+        else if (file.type === "fromPath") {
+            videoLinks.push([file.filePath,file.name, file.lastModifiedDate]);  
         }
     }
     
@@ -329,7 +399,7 @@ function playRandomVideo() {
         console.error(error);
     }
     var isPipAlready = player.pip;
-
+    console.log(videoLinks[idx][0])
     player.source={
         type: "video",
         title: "Krutik",
@@ -499,6 +569,10 @@ function setFilter(){
         upBtn.classList.remove("invisible");
         lyricsEle.classList.add("invisible")
         lyricsSec.classList.remove("invisible")
+    })
+
+    toogleLyricsBtn.addEventListener("click", function() {
+        lyricsSec.classList.toggle("invisible");
     })
 }
 

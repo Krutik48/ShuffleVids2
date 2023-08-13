@@ -20,6 +20,13 @@
     ]
   },
   "devDependencies": {
-    "electron-builder": "^24.6.3"
+    "electron-builder": "^24.6.3",
+    "electron": "^25.4.0"
+  },
+  "build": {
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }

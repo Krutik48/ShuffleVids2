@@ -89,26 +89,31 @@ body::-webkit-scrollbar {
     list-style: none;
     padding: 0;
     cursor: pointer;
+    overflow:hidden
+}
+
+#playlist-div{
+    padding: 0;
     overflow-y: scroll;
 }
 
-#playlist::-webkit-scrollbar {
+#playlist-div::-webkit-scrollbar {
     width: 7px;
 }
  
   /* Track */
-#playlist::-webkit-scrollbar-track {
+#playlist-div::-webkit-scrollbar-track {
     background: transparent;
 }
    
   /* Handle */
-#playlist::-webkit-scrollbar-thumb {
+#playlist-div::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background: rgb(222, 218, 218); 
 }
   
   /* Handle on hover */
-#playlist::-webkit-scrollbar-thumb:hover {
+#playlist-div::-webkit-scrollbar-thumb:hover {
     background: #555;
 } 
 
@@ -171,7 +176,8 @@ body::-webkit-scrollbar {
     color: white !important;
 }
 
-#dark, #light, #suffleBtn{
+
+#dark, #light, #suffleBtn, #sortAtobBtn, #sortTimeBtn{
     width: 60px !important;
     height: 50px !important;
     color: white;
@@ -245,6 +251,9 @@ li:active {
     max-width: 35vw;
     animation: slide-in 0.5s ease-out forwards;
     padding: 15px;
+}
+#lyrics-video-ele pre{
+    overflow: hidden;
 }
 
 #lyrics{
